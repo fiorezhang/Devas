@@ -14,8 +14,8 @@ SOUL_ETH = 2
 SOUL_WOD = 3
 SOUL_MTL = 4
 
-HEALTH_BODY = 10
-HEALTH_SOUL = 10
+HEALTH_BODY = 8
+HEALTH_SOUL = 8
 
 #输入待判定的两个点数，加上属性克制修正，以及随机性修正，返回正数，0，或负数
 def judge(valueA, valueB, correctParam=0, correctRand=0):
@@ -51,13 +51,8 @@ def correctSoul(paramA, paramB):
 
 #修正随机骰子，例如：0表示减益，5表示增益，返回正数，0，或负数
 def correctRandom():
-    d = dice(6)
-    if d == 0:
-        return -1
-    elif d == 5:
-        return 1
-    else:
-        return 0
+    diceListRand = [-1, 0, 0, 0, 0, 1]
+    return diceListRand[dice(6)]
         
 def getValue(num):
     assert(num>=0)
@@ -151,10 +146,28 @@ def combatBoth(playerA, playerB):
 def setDiceListBody(player):
     playerBody = player[:3]
     indexPlayerBody = [i for i,v in sorted(enumerate(playerBody), key=lambda x:x[1], reverse=True)]
-    return [indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[1], indexPlayerBody[1], indexPlayerBody[2]]
+    ret = dice(3)
+    if ret == 0:
+        return [indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[1], indexPlayerBody[1], indexPlayerBody[2]]
+    elif ret == 1:    
+        return [indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[1], indexPlayerBody[1], indexPlayerBody[2]]
+    else:
+        return [indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[1], indexPlayerBody[1], indexPlayerBody[2], indexPlayerBody[2]]
 
 #自定义骰子，例如3-2-1，3-1-1-1
 def setDiceListSoul(player):
     playerSoul = player[-5:]
     indexPlayerSoul = [i for i,v in sorted(enumerate(playerSoul), key=lambda x:x[1], reverse=True)]
-    return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]    
+    ret = dice(6)
+    if ret == 0:
+        return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]   
+    elif ret == 1:
+        return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]  
+    elif ret == 2:
+        return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]   
+    elif ret == 3:        
+        return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]   
+    elif ret == 4:
+        return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]  
+    else:
+        return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3], indexPlayerSoul[4]]        
