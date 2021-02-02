@@ -72,56 +72,81 @@ def getValue(num):
         
 #战斗过程，每次判定失败者扣除一点生命，到0结束        
 def combatBody(playerA, playerB):
-    print("player A    ", end='')    
-    print(playerA)
-    print("player B    ", end='')    
-    print(playerB)
     healthBodyA, healthBodyB = HEALTH_BODY, HEALTH_BODY
     playerBodyA, playerBodyB = playerA[:3], playerB[:3]
     diceListBodyA, diceListBodyB = setDiceListBody(playerA), setDiceListBody(playerB)
-    print("diceListBody A    ", end='')    
-    print(diceListBodyA)
-    print("diceListBody B    ", end='')    
-    print(diceListBodyB)
+    round = 0
     while True:
-        diceBodyA, diceBodyB = dice(6), dice(6)
-        print("diceBody A    ", end='')    
-        print(diceBodyA)
-        print("diceBody B    ", end='')    
-        print(diceBodyB)
-    
+        round += 1
+        diceBodyA, diceBodyB = dice(6), dice(6)   
         paramBodyA, paramBodyB = diceListBodyA[diceBodyA], diceListBodyB[diceBodyB]
-        print("paramBody A    ", end='')    
-        print(paramBodyA)
-        print("paramBody B    ", end='')    
-        print(paramBodyB)
-        
         valueBodyA, valueBodyB = getValue(playerBodyA[paramBodyA]), getValue(playerBodyB[paramBodyB])
-        print("valueBody A    ", end='')    
-        print(valueBodyA)
-        print("valueBody B    ", end='')    
-        print(valueBodyB)        
-        
         correctRand = correctRandom()
-        print("correctRand    ", end='')    
-        print(correctRand)        
-        
         result = judge(valueBodyA, valueBodyB, correctBody(paramBodyA, paramBodyB), correctRand)
-        print("result    ", end='')    
-        print(result)           
-        
         if result < 0:
             healthBodyA -= 1
         elif result > 0:
             healthBodyB -= 1
-        print("healthBody A    ", end='')    
-        print(healthBodyA)
-        print("healthBody B    ", end='')    
-        print(healthBodyB)            
-            
         if healthBodyA == 0 or healthBodyB == 0:
             break
-        
+    return healthBodyA, healthBodyB, round
+ 
+#战斗过程，每次判定失败者扣除一点生命，到0结束        
+def combatSoul(playerA, playerB):
+    healthSoulA, healthSoulB = HEALTH_SOUL, HEALTH_SOUL
+    playerSoulA, playerSoulB = playerA[-5:], playerB[-5:]
+    diceListSoulA, diceListSoulB = setDiceListSoul(playerA), setDiceListSoul(playerB)
+    round = 0
+    while True:
+        round += 1
+        diceSoulA, diceSoulB = dice(6), dice(6)   
+        paramSoulA, paramSoulB = diceListSoulA[diceSoulA], diceListSoulB[diceSoulB]
+        valueSoulA, valueSoulB = getValue(playerSoulA[paramSoulA]), getValue(playerSoulB[paramSoulB])
+        correctRand = correctRandom()
+        result = judge(valueSoulA, valueSoulB, correctSoul(paramSoulA, paramSoulB), correctRand)
+        if result < 0:
+            healthSoulA -= 1
+        elif result > 0:
+            healthSoulB -= 1
+        if healthSoulA == 0 or healthSoulB == 0:
+            break
+    return healthSoulA, healthSoulB, round
+
+#战斗过程，每次判定失败者扣除一点生命，到0结束        
+def combatBoth(playerA, playerB):
+    healthBodyA, healthBodyB = HEALTH_BODY, HEALTH_BODY
+    playerBodyA, playerBodyB = playerA[:3], playerB[:3]
+    diceListBodyA, diceListBodyB = setDiceListBody(playerA), setDiceListBody(playerB)
+    healthSoulA, healthSoulB = HEALTH_SOUL, HEALTH_SOUL
+    playerSoulA, playerSoulB = playerA[-5:], playerB[-5:]
+    diceListSoulA, diceListSoulB = setDiceListSoul(playerA), setDiceListSoul(playerB)
+    round = 0
+    while True:
+        round += 1
+        diceBodyA, diceBodyB = dice(6), dice(6)   
+        paramBodyA, paramBodyB = diceListBodyA[diceBodyA], diceListBodyB[diceBodyB]
+        valueBodyA, valueBodyB = getValue(playerBodyA[paramBodyA]), getValue(playerBodyB[paramBodyB])
+        correctRand = correctRandom()
+        result = judge(valueBodyA, valueBodyB, correctBody(paramBodyA, paramBodyB), correctRand)
+        if result < 0:
+            healthBodyA -= 1
+        elif result > 0:
+            healthBodyB -= 1
+        if healthBodyA == 0 or healthBodyB == 0:
+            break
+        diceSoulA, diceSoulB = dice(6), dice(6)   
+        paramSoulA, paramSoulB = diceListSoulA[diceSoulA], diceListSoulB[diceSoulB]
+        valueSoulA, valueSoulB = getValue(playerSoulA[paramSoulA]), getValue(playerSoulB[paramSoulB])
+        correctRand = correctRandom()
+        result = judge(valueSoulA, valueSoulB, correctSoul(paramSoulA, paramSoulB), correctRand)
+        if result < 0:
+            healthSoulA -= 1
+        elif result > 0:
+            healthSoulB -= 1
+        if healthSoulA == 0 or healthSoulB == 0:
+            break
+    return healthBodyA, healthBodyB, healthSoulA, healthSoulB, round
+ 
 #自定义骰子，例如3-2-1，3-1-1-1
 def setDiceListBody(player):
     playerBody = player[:3]
@@ -129,7 +154,7 @@ def setDiceListBody(player):
     return [indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[0], indexPlayerBody[1], indexPlayerBody[1], indexPlayerBody[2]]
 
 #自定义骰子，例如3-2-1，3-1-1-1
-def setDiceSoul(player):
+def setDiceListSoul(player):
     playerSoul = player[-5:]
     indexPlayerSoul = [i for i,v in sorted(enumerate(playerSoul), key=lambda x:x[1], reverse=True)]
     return [indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[0], indexPlayerSoul[1], indexPlayerSoul[2], indexPlayerSoul[3]]    
